@@ -410,7 +410,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jfzepeda.ModelNap.debug;
 				PRODUCT_NAME = ModelNap;
 				REGISTER_APP_GROUPS = YES;
@@ -444,7 +444,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jfzepeda.ModelNap;
 				PRODUCT_NAME = ModelNap;
 				REGISTER_APP_GROUPS = YES;

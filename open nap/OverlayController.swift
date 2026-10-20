@@ -24,13 +24,13 @@ private struct OverlayView: View {
     var body: some View {
         ZStack {
             WallpaperBackground()
-            VStack(spacing: 18) {
-                GlassLetters(text: "LLM RUNNING")
-                Text("Click or press any key to take control")
-                    .font(.system(size: 13, weight: .regular))
-                    .tracking(1.5)
-                    .foregroundStyle(.white.opacity(0.28))
-            }
+//            VStack(spacing: 18) {
+//                GlassLetters(text: "LLM RUNNING")
+//                Text("Click or press any key to take control")
+//                    .font(.system(size: 13, weight: .regular))
+//                    .tracking(1.5)
+//                    .foregroundStyle(.white.opacity(0.28))
+//            }
         }.ignoresSafeArea().preferredColorScheme(.dark)
     }
 }
@@ -38,7 +38,7 @@ private struct OverlayView: View {
 /// macOS system wallpaper (Sonoma); falls back to a gradient with blurred colour blobs if the file is missing.
 private struct WallpaperBackground: View {
     /// Real system wallpaper, loaded once and shared by every screen's overlay.
-    private static let systemWallpaper = NSImage(contentsOfFile: "/System/Library/Desktop Pictures/Sonoma.heic")
+    private static let systemWallpaper = NSImage(contentsOfFile: "/System/Library/Wallpapers/.default/DefaultAerial.heic")
 
     var body: some View {
         if let image = Self.systemWallpaper {
