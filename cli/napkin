@@ -1,0 +1,112 @@
+#!/bin/bash
+set -u
+
+usage() {
+    cat <<'HELP'
+Usage: napkin COMMAND
+
+  status                Show state, mode and idle countdown as JSON
+  start | resume        Request AI activation now (new sessions only)
+  stop                  Block inference and request process termination
+  mode [auto|manual|toggle]
+                        Read or change automatic activation
+  auto on|off           Alias for mode auto|manual
+  idle get              Read the configured timeout
+  idle set MINUTES      Save a timeout from 1 to 240 (e.g. 10 or 10m)
+  agents start          Start the locally configured agent while AI is active
+  help                  Show this help
+
+Napkin must be open. New keyboard or mouse activity always stops AI.
+Changing mode does not stop an active session. Enabling auto or setting the
+timeout restarts the idle countdown. Resume does not restore cancelled work.
+
+NAPKIN_URL defaults to http://127.0.0.1:11435. For remote use, connect through
+an authorized SSH tunnel or private proxy. Commands return JSON; start/stop
+acknowledge a request, so use status to check when the transition finishes.
+HELP
+}
+
+invalid() {
+    printf 'napkin: %s\nRun napkin help for usage.\n' "$1" >&2
+    exit 2
+}
+
+method=GET
+path=/control/status
+body=''
+[ "$#" -gt 0 ] || { usage; exit 0; }
+command=$1
+shift
+case "$command" in
+    help|--help|-h)
+        [ "$#" -eq 0 ] || invalid 'Unexpected arguments.'
+        usage
+        exit 0
+        ;;
+    status)
+        [ "$#" -eq 0 ] || invalid 'status takes no arguments.'
+        ;;
+    start|resume|stop)
+        [ "$#" -eq 0 ] || invalid "$command takes no arguments."
+        [ "$command" != resume ] || command=start
+        body="{\"action\":\"$command\"}"
+        ;;
+    mode)
+        [ "$#" -le 1 ] || invalid 'Use mode [auto|manual|toggle].'
+        if [ "$#" -eq 1 ]; then
+            case "$1" in
+                auto|manual|toggle) body="{\"action\":\"mode\",\"value\":\"$1\"}" ;;
+                *) invalid 'Use mode [auto|manual|toggle].' ;;
+            esac
+        fi
+        ;;
+    auto)
+        [ "$#" -eq 1 ] || invalid 'Use auto on|off.'
+        case "$1" in
+            on) body='{"action":"mode","value":"auto"}' ;;
+            off) body='{"action":"mode","value":"manual"}' ;;
+            *) invalid 'Use auto on|off.' ;;
+        esac
+        ;;
+    idle)
+        if [ "$#" -eq 1 ] && [ "$1" = get ]; then
+            :
+        elif [ "$#" -eq 2 ] && [ "$1" = set ]; then
+            minutes=${2%m}
+            [[ "$minutes" =~ ^[0-9]+$ ]] &&
+                [ "$minutes" -ge 1 ] 2>/dev/null && [ "$minutes" -le 240 ] 2>/dev/null ||
+                invalid 'Idle timeout must be an integer from 1 to 240 minutes (e.g. 10m).'
+            minutes=$((10#$minutes))
+            body="{\"action\":\"idle\",\"minutes\":$minutes}"
+        else
+            invalid 'Use idle get or idle set MINUTES.'
+        fi
+        ;;
+    agents)
+        [ "$#" -eq 1 ] && [ "$1" = start ] || invalid 'Use agents start.'
+        method=POST
+        path=/agents/start
+        body='{}'
+        ;;
+    *) invalid "Unknown command: $command" ;;
+esac
+
+if [ -n "$body" ]; then
+    method=POST
+    [ "$path" = /agents/start ] || path=/control
+fi
+base=${NAPKIN_URL:-http://127.0.0.1:11435}
+args=(--silent --show-error --fail-with-body --noproxy '*' --proto '=http,https'
+      --connect-timeout 3 --max-time 15 --request "$method" --write-out '\n')
+if [ "$method" = POST ]; then
+    args+=(--header 'Content-Type: application/json' --data-binary "$body")
+fi
+if /usr/bin/curl "${args[@]}" --url "${base%/}$path"; then
+    exit 0
+else
+    result=$?
+    if [ "$result" -eq 7 ]; then
+        printf 'napkin: Cannot connect. Open Napkin and check NAPKIN_URL (%s).\n' "$base" >&2
+    fi
+    exit 1
+fi

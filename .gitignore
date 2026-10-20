@@ -14,7 +14,7 @@ build/
 .build/
 .swiftpm/
 
-# Release: solo se versiona el zip (dist/ModelNap-<version>-macOS.zip)
+# Release: solo se versiona el zip (dist/Napkin-<version>-macOS.zip)
 dist/*.app
 
 # graphify / herramientas locales

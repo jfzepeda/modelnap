@@ -1,4 +1,4 @@
-# ModelNap — Especificación técnica
+# Napkin — Especificación técnica
 
 **Plataforma:** macOS  
 **Lenguaje:** Swift + SwiftUI  
@@ -7,9 +7,9 @@
 
 ## 1. Principio fundamental: Human First
 
-**La prioridad absoluta de ModelNap es el usuario, no la IA.**
+**La prioridad absoluta de Napkin es el usuario, no la IA.**
 
-Cuando el usuario hace clic, presiona una tecla o interactúa con el trackpad, ModelNap debe interrumpir inmediatamente toda actividad de IA administrada.
+Cuando el usuario hace clic, presiona una tecla o interactúa con el trackpad, Napkin debe interrumpir inmediatamente toda actividad de IA administrada.
 
 No importa si:
 - Un modelo está generando tokens.
@@ -31,7 +31,7 @@ Las sesiones interrumpidas se consideran terminadas definitivamente. El usuario 
 - Terminar los procesos administrados, incluidos sus procesos hijos, cuando sea posible.
 - Descargar los modelos de memoria.
 - Impedir que nuevos agentes o solicitudes vuelvan a cargar modelos durante el periodo de actividad humana.
-- No terminar aplicaciones, procesos ni servicios ajenos a ModelNap.
+- No terminar aplicaciones, procesos ni servicios ajenos a Napkin.
 
 **Objetivo de rendimiento:** iniciar la interrupción en menos de 100 ms desde la detección del evento. La liberación completa de memoria puede tardar más y debe medirse por separado.
 
@@ -89,7 +89,7 @@ Si un proceso no puede terminarse, mostrar un error discreto y mantener bloquead
 
 ## 3. Detección de actividad humana
 
-ModelNap debe detectar:
+Napkin debe detectar:
 
 - Clic izquierdo, derecho y otros botones del mouse.
 - Pulsaciones de teclado.
@@ -137,7 +137,7 @@ Ejemplo:
 
 ## 5. Administración de procesos
 
-ModelNap debe controlar únicamente los procesos y servicios registrados explícitamente bajo su administración.
+Napkin debe controlar únicamente los procesos y servicios registrados explícitamente bajo su administración.
 
 ### Tipos de procesos
 
@@ -166,7 +166,7 @@ Crear un componente `ProcessManager` responsable de:
 
 Los procesos deben iniciarse en grupos o mecanismos de supervisión que permitan identificar y terminar sus descendientes.
 
-No utilizar comandos indiscriminados como `killall`, `pkill` por nombre genérico ni terminar procesos que ModelNap no pueda identificar como propios.
+No utilizar comandos indiscriminados como `killall`, `pkill` por nombre genérico ni terminar procesos que Napkin no pueda identificar como propios.
 
 ### Política de interrupción
 
@@ -197,11 +197,11 @@ El adaptador debe:
 
 Los adaptadores deben implementar mecanismos equivalentes según las capacidades reales del servidor.
 
-Cuando el servidor mantenga los pesos residentes en memoria, ModelNap podrá terminar el proceso administrado para liberar los recursos.
+Cuando el servidor mantenga los pesos residentes en memoria, Napkin podrá terminar el proceso administrado para liberar los recursos.
 
 ### Restricción
 
-ModelNap no debe asumir que enviar una señal de pausa como `SIGSTOP` libera memoria. Suspender la ejecución no equivale a descargar un modelo.
+Napkin no debe asumir que enviar una señal de pausa como `SIGSTOP` libera memoria. Suspender la ejecución no equivale a descargar un modelo.
 
 ## 7. Overlay de pantalla completa
 
@@ -227,7 +227,7 @@ El overlay es una interfaz informativa y de recuperación de control, no un meca
 
 ## 8. Aplicación de barra de menú
 
-ModelNap debe funcionar como aplicación residente de macOS.
+Napkin debe funcionar como aplicación residente de macOS.
 
 ### Información visible
 
@@ -243,11 +243,11 @@ ModelNap debe funcionar como aplicación residente de macOS.
 - `Enable AI Now`
 - `Disable Automatic Activation`
 - `Settings`
-- `Quit ModelNap`
+- `Quit Napkin`
 
 La acción `Stop AI Now` debe ejecutar exactamente la misma política de interrupción que una interacción humana.
 
-La opción `Quit ModelNap` debe detener primero los procesos administrados, salvo que el usuario configure explícitamente otra política.
+La opción `Quit Napkin` debe detener primero los procesos administrados, salvo que el usuario configure explícitamente otra política.
 
 ## 9. Configuración
 
@@ -328,7 +328,7 @@ Si se detecta actividad durante el arranque de un servidor, el arranque debe can
 
 ## 11. Comportamiento remoto
 
-ModelNap debe permitir que clientes remotos accedan al servidor de inferencia mediante una red privada, por ejemplo Tailscale.
+Napkin debe permitir que clientes remotos accedan al servidor de inferencia mediante una red privada, por ejemplo Tailscale.
 
 ### Durante AI_ACTIVE
 
@@ -349,7 +349,7 @@ La exposición de puertos debe limitarse a interfaces y clientes autorizados.
 
 ## 12. Seguridad y recuperación
 
-ModelNap debe garantizar que el usuario pueda recuperar el control de la Mac incluso si un servidor o agente falla.
+Napkin debe garantizar que el usuario pueda recuperar el control de la Mac incluso si un servidor o agente falla.
 
 Requisitos:
 
@@ -416,11 +416,11 @@ Al iniciar la aplicación después de un cierre inesperado, no asumir que los pr
 
 ### Test 7 — Aislamiento
 
-**Given:** existen aplicaciones y procesos externos a ModelNap.
+**Given:** existen aplicaciones y procesos externos a Napkin.
 
 **When:** se interrumpe la IA.
 
-**Then:** ninguno de esos procesos externos es terminado por ModelNap.
+**Then:** ninguno de esos procesos externos es terminado por Napkin.
 
 ### Test 8 — Acceso remoto
 
@@ -462,11 +462,11 @@ Al iniciar la aplicación después de un cierre inesperado, no asumir que los pr
 - Recuperación de tareas incompletas.
 - Orquestación multiagente.
 - Distribución de inferencia entre varias Macs.
-- Administración de procesos ajenos a ModelNap.
+- Administración de procesos ajenos a Napkin.
 
 ## 15. Criterio de éxito
 
-ModelNap cumple su objetivo cuando el usuario puede dejar su Mac ejecutando modelos locales y agentes durante horas, regresar, hacer **un solo clic** y recuperar inmediatamente el control de la interfaz, mientras la aplicación termina la carga de IA y libera sus recursos.
+Napkin cumple su objetivo cuando el usuario puede dejar su Mac ejecutando modelos locales y agentes durante horas, regresar, hacer **un solo clic** y recuperar inmediatamente el control de la interfaz, mientras la aplicación termina la carga de IA y libera sus recursos.
 
 Cuando transcurren 30 minutos sin actividad humana, la infraestructura vuelve a estar disponible para iniciar nuevas sesiones.
 
