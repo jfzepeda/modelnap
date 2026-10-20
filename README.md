@@ -17,7 +17,7 @@ App Sandbox está desactivado: lanzar ejecutables arbitrarios administrados y us
 El binario universal (arm64 + x86_64) está en `dist/ModelNap-1.2-macOS.zip`. Para bajar **solo ese zip**, sin el resto del repositorio ni su historial:
 
 ```sh
-git clone --depth 1 --filter=blob:none --sparse https://github.com/USUARIO/REPO.git modelnap-release
+git clone --depth 1 --filter=blob:none --sparse https://github.com/jfzepeda/modelnap.git modelnap-release
 cd modelnap-release
 git sparse-checkout set --no-cone '/dist/ModelNap-1.2-macOS.zip'
 unzip dist/ModelNap-1.2-macOS.zip -d /Applications
@@ -26,7 +26,7 @@ unzip dist/ModelNap-1.2-macOS.zip -d /Applications
 Requiere git 2.25 o superior. Sin git, equivale a:
 
 ```sh
-curl -LO https://github.com/USUARIO/REPO/raw/main/dist/ModelNap-1.2-macOS.zip
+curl -LO https://github.com/jfzepeda/modelnap/raw/main/dist/ModelNap-1.2-macOS.zip
 ```
 
 Como la firma es Apple Development y no está notarizada, la primera vez hay que abrir la app con clic derecho → Abrir.
