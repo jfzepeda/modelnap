@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# Xcode
+xcuserdata/
+DerivedData/
+build/
+*.xcarchive
+*.dSYM
+*.dSYM.zip
+*.xcuserstate
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Release: solo se versiona el zip (dist/ModelNap-<version>-macOS.zip)
+dist/*.app
+
+# graphify / herramientas locales
+graphify-out/
+.claude/
