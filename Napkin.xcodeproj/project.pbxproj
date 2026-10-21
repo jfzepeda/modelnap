@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		C11000000000000000000001 /* napkin in Resources */ = {isa = PBXBuildFile; fileRef = C11000000000000000000002 /* napkin */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		06C67A7D3083DA6100DEA0BF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		06C67A6F3083DA6000DEA0BF /* Napkin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Napkin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06C67A7C3083DA6100DEA0BF /* NapkinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NapkinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		06C67A863083DA6100DEA0BF /* NapkinUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NapkinUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C11000000000000000000002 /* napkin */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = napkin; path = cli/napkin; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -76,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				06C67A713083DA6000DEA0BF /* Napkin */,
+				C11000000000000000000002 /* napkin */,
 				06C67A7F3083DA6100DEA0BF /* NapkinTests */,
 				06C67A893083DA6100DEA0BF /* NapkinUITests */,
 				06C67A703083DA6000DEA0BF /* Products */,
@@ -212,6 +218,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C11000000000000000000001 /* napkin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,7 +417,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jfzepeda.Napkin.debug;
 				PRODUCT_NAME = Napkin;
 				REGISTER_APP_GROUPS = YES;
@@ -444,7 +451,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jfzepeda.Napkin;
 				PRODUCT_NAME = Napkin;
 				REGISTER_APP_GROUPS = YES;

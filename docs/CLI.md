@@ -29,6 +29,12 @@ App: Swift, SwiftUI/AppKit y Foundation/Network existentes, macOS 14+. CLI: scri
 - `NapkinTests/`: pruebas del control, persistencia y transporte.
 - `README.md`: instalación y ejemplos de uso local/remoto.
 
+### Distribución por ZIP
+
+Xcode incluye `cli/napkin` como recurso ejecutable en `Napkin.app/Contents/Resources/napkin` antes de firmar la app. El ZIP de distribución contiene la app con el CLI y las rutas de control de la misma compilación. El usuario puede ejecutar el script directamente o enlazarlo desde `~/.local/bin/napkin`; no necesita clonar el repositorio ni compilar. El enlace sigue apuntando al CLI actualizado cuando se reemplaza la app en `/Applications`.
+
+La prueba de extremo a extremo debe ejecutar el recurso del bundle y comprobar que coincide con el script fuente y conserva permisos de ejecución. Antes de empaquetar, verificar la firma del bundle y la presencia del script. El empaquetado no instala ni cambia el PATH del equipo del usuario.
+
 ### Protocolo
 
 Reutilizar el gateway HTTP de loopback `127.0.0.1:11435`:

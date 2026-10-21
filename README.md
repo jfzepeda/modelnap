@@ -14,19 +14,19 @@ App Sandbox está desactivado: lanzar ejecutables arbitrarios administrados y us
 
 ## Descargar el release
 
-El binario universal (arm64 + x86_64) está en `dist/Napkin-1.3-macOS.zip`. Para bajar **solo ese zip**, sin el resto del repositorio ni su historial:
+El binario universal (arm64 + x86_64) está en `dist/Napkin-2.0-macOS.zip`. Para bajar **solo ese zip**, sin el resto del repositorio ni su historial:
 
 ```sh
 git clone --depth 1 --filter=blob:none --sparse https://github.com/jfzepeda/modelnap.git napkin-release
 cd napkin-release
-git sparse-checkout set --no-cone '/dist/Napkin-1.3-macOS.zip'
-unzip dist/Napkin-1.3-macOS.zip -d /Applications
+git sparse-checkout set --no-cone '/dist/Napkin-2.0-macOS.zip'
+unzip dist/Napkin-2.0-macOS.zip -d /Applications
 ```
 
 Requiere git 2.25 o superior. Sin git, equivale a:
 
 ```sh
-curl -LO https://github.com/jfzepeda/modelnap/raw/main/dist/Napkin-1.3-macOS.zip
+curl -LO https://github.com/jfzepeda/modelnap/raw/main/dist/Napkin-2.0-macOS.zip
 ```
 
 Como la firma es Apple Development y no está notarizada, la primera vez hay que abrir la app con clic derecho → Abrir.
@@ -121,22 +121,26 @@ Si la tailnet se comparte con otras personas, limitar el acceso al Studio con AC
 
 ## CLI de control
 
-La [especificación del CLI](docs/CLI.md) define los comandos y el protocolo. Requiere compilar y abrir la app con estos cambios; el zip 1.3 anterior no incluye las rutas de control. El CLI es un script Bash que usa el `curl` de macOS, sin dependencias adicionales. Desde la raíz del repositorio:
+La [especificación del CLI](docs/CLI.md) define los comandos y el protocolo. El ZIP 2.0 incluye el CLI dentro de `Napkin.app`; no hace falta descargar el repositorio ni compilar. El CLI es un script Bash que usa el `curl` de macOS, sin dependencias adicionales.
+
+Después de copiar Napkin a `/Applications` y abrirla, se puede ejecutar directamente:
 
 ```sh
-./cli/napkin help
-./cli/napkin status
+/Applications/Napkin.app/Contents/Resources/napkin help
+/Applications/Napkin.app/Contents/Resources/napkin status
 ```
 
 Para instalar el comando en una carpeta del usuario:
 
 ```sh
 mkdir -p "$HOME/.local/bin"
-install -m 755 cli/napkin "$HOME/.local/bin/napkin"
+ln -sfn /Applications/Napkin.app/Contents/Resources/napkin "$HOME/.local/bin/napkin"
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
-Agregar ese `export PATH` a `~/.zshrc` para conservarlo en nuevas terminales.
+Agregar ese `export PATH` a `~/.zshrc` para conservarlo en nuevas terminales. El enlace usa el CLI incluido en la app y se actualiza al reemplazarla. Si se instala la app en otra carpeta, ajustar la ruta del enlace.
+
+Para desarrollo desde el repositorio, el mismo script está en `cli/napkin` y puede ejecutarse con `./cli/napkin help`.
 
 ```sh
 napkin mode              # Consultar modo y estado

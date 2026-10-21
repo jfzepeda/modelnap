@@ -155,8 +155,12 @@ struct CLIControlTests {
         fixture.gateway.control = { try fixture.coordinator.handleControl($0) }
         try fixture.gateway.start()
         try await Task.sleep(for: .milliseconds(200))
-        let script = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-            .deletingLastPathComponent().appendingPathComponent("cli/napkin").path
+        let bundledCLI = try #require(Bundle.main.url(forResource: "napkin", withExtension: nil))
+        #expect(FileManager.default.isExecutableFile(atPath: bundledCLI.path))
+        let sourceCLI = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+            .deletingLastPathComponent().appendingPathComponent("cli/napkin")
+        #expect(try Data(contentsOf: bundledCLI) == Data(contentsOf: sourceCLI))
+        let script = bundledCLI.path
         for arguments in [["mode", "manual"], ["idle", "set", "10m"], ["mode", "toggle"], ["mode", "toggle"], ["stop"], ["status"]] {
             let result = try await Self.runCLI(script, port: fixture.port, arguments: arguments)
             #expect(result.0 == 0, "\(arguments): \(result.1)")
