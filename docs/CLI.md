@@ -15,6 +15,7 @@ Controlar la app de barra de menú desde terminal, conservando Human First. La a
 - `napkin auto on|off`: alias de mode auto|manual.
 - `napkin idle get`: consulta la espera persistida.
 - `napkin idle set 10m`: cambia y guarda la espera, en minutos enteros de 1 a 240, igual que Settings. Acepta minutos sin sufijo o con m. Reinicia el contador de inactividad para que reducir el tiempo no provoque una activación inesperada inmediata.
+- `napkin menubar [show|hide]`: consulta o cambia la visibilidad del icono, compartida con **Show in menu bar** en Settings → System. Persiste entre reinicios; ocultarlo mantiene la app y el gateway funcionando. `napkin menubar show` permite recuperar el icono.
 - `napkin agents start`: inicia una sesión del runtime configurado solo si la IA está activa.
 - `napkin help`: ayuda y ejemplos; comandos inválidos y errores devuelven código de salida distinto de cero.
 
@@ -39,11 +40,11 @@ La prueba de extremo a extremo debe ejecutar el recurso del bundle y comprobar q
 
 Reutilizar el gateway HTTP de loopback `127.0.0.1:11435`:
 
-- `GET /control/status`: snapshot JSON con `state`, `accepting_requests`, `mode`, `automatic_activation`, `idle_minutes`, `remaining_seconds`, `starting`, `stopping`, `can_start` y `error` opcional.
-- `POST /control`: requiere `Content-Type: application/json` y ausencia de Origin. Cuerpo: `{"action":"start"}`, `{"action":"stop"}`, `{"action":"mode","value":"toggle"}` o `{"action":"idle","minutes":10}`. Acciones o valores inválidos: 400; inicio no disponible: 409. Mutaciones válidas devuelven el snapshot actualizado; start/stop devuelven 202 porque su trabajo termina asíncronamente.
+- `GET /control/status`: snapshot JSON con `state`, `accepting_requests`, `mode`, `automatic_activation`, `show_in_menu_bar`, `idle_minutes`, `remaining_seconds`, `starting`, `stopping`, `can_start` y `error` opcional.
+- `POST /control`: requiere `Content-Type: application/json` y ausencia de Origin. Cuerpo: `{"action":"start"}`, `{"action":"stop"}`, `{"action":"mode","value":"toggle"}` `{"action":"idle","minutes":10}` o `{"action":"menubar","value":"hide"}` (también admite `show`). Acciones o valores inválidos: 400; inicio no disponible: 409. Mutaciones válidas devuelven el snapshot actualizado; start/stop devuelven 202 porque su trabajo termina asíncronamente.
 - `POST /agents/start`: reutilizar la ruta existente, sin aceptar comandos arbitrarios.
 - Las conexiones de control quedan excluidas de la cancelación de inferencias para que stop pueda responder. Shutdown cierra todas las conexiones.
-- El CLI usa `NAPKIN_URL` si está definida, y por defecto `http://127.0.0.1:11435`. Consultas de mode e idle devuelven el snapshot completo en JSON. Los errores HTTP y de conexión producen código de salida distinto de cero.
+- El CLI usa `NAPKIN_URL` si está definida, y por defecto `http://127.0.0.1:11435`. Consultas de mode, idle y menubar devuelven el snapshot completo en JSON. Los errores HTTP y de conexión producen código de salida distinto de cero.
 
 No se incorpora autenticación propia: el acceso remoto a estas nuevas rutas permite controlar activación y preferencias. Mantener el gateway detrás de SSH o Tailscale Serve con acceso autorizado, igual que el gateway existente. Las peticiones HTTP no cuentan como actividad humana; los comandos no omiten permisos ni interrupción por teclado/mouse. No aceptar peticiones de control enviadas por páginas web mediante Origin ni Content-Type de formularios.
 

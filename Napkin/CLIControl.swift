@@ -1,7 +1,7 @@
 import Foundation
 
 struct ControlCommand: Decodable {
-    enum Action: String, Decodable { case start, stop, mode, idle }
+    enum Action: String, Decodable { case start, stop, mode, idle, menubar }
     let action: Action
     var value: String?
     var minutes: Int?
@@ -12,6 +12,7 @@ struct ControlStatus: Encodable {
     let acceptingRequests: Bool
     let mode: String
     let automaticActivation: Bool
+    let showInMenuBar: Bool
     let idleMinutes: Double
     let remainingSeconds: Int
     let starting: Bool

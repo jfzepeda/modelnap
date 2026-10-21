@@ -14,19 +14,19 @@ App Sandbox está desactivado: lanzar ejecutables arbitrarios administrados y us
 
 ## Descargar el release
 
-El binario universal (arm64 + x86_64) está en `dist/Napkin-2.0-macOS.zip`. Para bajar **solo ese zip**, sin el resto del repositorio ni su historial:
+El binario universal (arm64 + x86_64) está en `dist/Napkin-2.2-macOS.zip`. Para bajar **solo ese zip**, sin el resto del repositorio ni su historial:
 
 ```sh
 git clone --depth 1 --filter=blob:none --sparse https://github.com/jfzepeda/modelnap.git napkin-release
 cd napkin-release
-git sparse-checkout set --no-cone '/dist/Napkin-2.0-macOS.zip'
-unzip dist/Napkin-2.0-macOS.zip -d /Applications
+git sparse-checkout set --no-cone '/dist/Napkin-2.2-macOS.zip'
+unzip dist/Napkin-2.2-macOS.zip -d /Applications
 ```
 
 Requiere git 2.25 o superior. Sin git, equivale a:
 
 ```sh
-curl -LO https://github.com/jfzepeda/modelnap/raw/main/dist/Napkin-2.0-macOS.zip
+curl -LO https://github.com/jfzepeda/modelnap/raw/main/dist/Napkin-2.2-macOS.zip
 ```
 
 Como la firma es Apple Development y no está notarizada, la primera vez hay que abrir la app con clic derecho → Abrir.
@@ -121,7 +121,7 @@ Si la tailnet se comparte con otras personas, limitar el acceso al Studio con AC
 
 ## CLI de control
 
-La [especificación del CLI](docs/CLI.md) define los comandos y el protocolo. El ZIP 2.0 incluye el CLI dentro de `Napkin.app`; no hace falta descargar el repositorio ni compilar. El CLI es un script Bash que usa el `curl` de macOS, sin dependencias adicionales.
+La [especificación del CLI](docs/CLI.md) define los comandos y el protocolo. El ZIP 2.2 incluye el CLI dentro de `Napkin.app`; no hace falta descargar el repositorio ni compilar. El CLI es un script Bash que usa el `curl` de macOS, sin dependencias adicionales.
 
 Después de copiar Napkin a `/Applications` y abrirla, se puede ejecutar directamente:
 
@@ -152,9 +152,14 @@ napkin idle get        # Consultar espera
 napkin start           # Activar IA inmediatamente
 napkin resume          # Igual que start; no recupera trabajo cancelado
 napkin stop            # Detener IA
+napkin menubar hide    # Ocultar el icono de la barra de menús
+napkin menubar show    # Volver a mostrarlo
+napkin menubar         # Consultar visibilidad (show_in_menu_bar)
 napkin agents start    # Iniciar el agente configurado
 napkin help            # Ver ayuda
 ```
+
+También puedes cambiar **Show in menu bar** en Settings → System. Ocultar el icono mantiene Napkin funcionando y se conserva al reiniciar la app. Para recuperarlo, ejecuta `napkin menubar show`.
 
 La configuración usa las mismas preferencias que los controles de la app. Pasar de manual a automático, o cambiar el tiempo de espera, reinicia el contador. Cambiar el modo no detiene una sesión activa ni cancela un arranque ya solicitado. Stop reinicia la espera y conserva el modo: con automático habilitado, la IA podrá activarse al cumplirse ese nuevo plazo.
 

@@ -5,7 +5,10 @@ import SwiftUI
 struct NapkinApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
     var body: some Scene {
-        MenuBarExtra("Napkin", systemImage: "moon.zzz") {
+        MenuBarExtra("Napkin", systemImage: "moon.zzz", isInserted: Binding(
+            get: { delegate.coordinator.settings.showInMenuBar },
+            set: { delegate.coordinator.settings.showInMenuBar = $0 }
+        )) {
             ContentView(coordinator: delegate.coordinator)
         }.menuBarExtraStyle(.window)
         Settings { SettingsView(coordinator: delegate.coordinator) }

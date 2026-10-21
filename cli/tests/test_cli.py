@@ -55,7 +55,7 @@ class CLITests(unittest.TestCase):
         return subprocess.run([str(CLI), *args], env=env, capture_output=True, text=True, timeout=20)
 
     def test_queries_use_status_without_mutations(self):
-        for args in [("status",), ("mode",), ("idle", "get")]:
+        for args in [("status",), ("mode",), ("idle", "get"), ("menubar",)]:
             with self.subTest(args=args):
                 result = self.run_cli(*args)
                 self.assertEqual(result.returncode, 0, result.stderr)
@@ -66,6 +66,8 @@ class CLITests(unittest.TestCase):
         cases = [
             (("start",), {"action": "start"}),
             (("resume",), {"action": "start"}),
+            (("menubar", "hide"), {"action": "menubar", "value": "hide"}),
+            (("menubar", "show"), {"action": "menubar", "value": "show"}),
             (("stop",), {"action": "stop"}),
             (("mode", "auto"), {"action": "mode", "value": "auto"}),
             (("mode", "manual"), {"action": "mode", "value": "manual"}),
@@ -89,7 +91,7 @@ class CLITests(unittest.TestCase):
         self.assertEqual(self.server.requests[-1][:3], ("POST", "/agents/start", {}))
 
     def test_invalid_arguments_never_send_requests(self):
-        cases = [("unknown",), ("mode", "other"), ("mode", "auto", "extra"),
+        cases = [("menubar", "other"), ("menubar", "hide", "extra"), ("unknown",), ("mode", "other"), ("mode", "auto", "extra"),
                  ("auto", "toggle"), ("auto",), ("status", "extra"), ("start", "extra"),
                  ("agents", "stop"), ("idle",), ("help", "extra")]
         cases += [("idle", "set", value) for value in

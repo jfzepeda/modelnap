@@ -4,6 +4,31 @@ import Testing
 
 @Suite(.serialized)
 struct CLIControlTests {
+    @Test @MainActor func menuBarVisibilityPersistsWithoutChangingActivation() throws {
+        let fixture = try ControlFixture()
+        defer { fixture.cleanup() }
+        let coordinator = fixture.coordinator
+        #expect(coordinator.settings.showInMenuBar)
+        for value in ["hide", "show", "hide"] {
+            let reply = try coordinator.handleControl(command("{\"action\":\"menubar\",\"value\":\"\(value)\"}"))
+            let visible = value == "show"
+            #expect(reply.code == 200)
+            #expect(try json(reply)["show_in_menu_bar"] as? Bool == visible)
+            #expect(SettingsManager(defaults: fixture.defaults).showInMenuBar == visible)
+            #expect(coordinator.settings.automaticActivation)
+            #expect(coordinator.state == .userActive)
+            #expect(!coordinator.isStarting)
+        }
+        for raw in [#"{"action":"menubar"}"#, #"{"action":"menubar","value":"other"}"#] {
+            #expect(throws: ControlError.self) { try coordinator.handleControl(command(raw)) }
+            #expect(!coordinator.settings.showInMenuBar)
+        }
+        coordinator.settings.showInMenuBar = true
+        let status = try coordinator.handleControl(GatewayRequest(method: "GET", path: "/control/status", body: Data()))
+        #expect(try json(status)["show_in_menu_bar"] as? Bool == true)
+        #expect(SettingsManager(defaults: fixture.defaults).showInMenuBar)
+    }
+
     @Test @MainActor func modesPersistAndManualSuppressesAutomaticStart() throws {
         let fixture = try ControlFixture()
         defer { fixture.cleanup() }
@@ -161,11 +186,12 @@ struct CLIControlTests {
             .deletingLastPathComponent().appendingPathComponent("cli/napkin")
         #expect(try Data(contentsOf: bundledCLI) == Data(contentsOf: sourceCLI))
         let script = bundledCLI.path
-        for arguments in [["mode", "manual"], ["idle", "set", "10m"], ["mode", "toggle"], ["mode", "toggle"], ["stop"], ["status"]] {
+        for arguments in [["mode", "manual"], ["idle", "set", "10m"], ["mode", "toggle"], ["mode", "toggle"], ["menubar", "hide"], ["status"], ["menubar", "show"], ["stop"], ["status"]] {
             let result = try await Self.runCLI(script, port: fixture.port, arguments: arguments)
             #expect(result.0 == 0, "\(arguments): \(result.1)")
             let snapshot = try #require(JSONSerialization.jsonObject(with: Data(result.1.utf8)) as? [String: Any])
             #expect(snapshot["mode"] as? String == (fixture.coordinator.settings.automaticActivation ? "auto" : "manual"))
+            #expect(snapshot["show_in_menu_bar"] as? Bool == fixture.coordinator.settings.showInMenuBar)
             #expect(snapshot["idle_minutes"] as? Double == fixture.coordinator.settings.idleMinutes)
         }
         #expect(!SettingsManager(defaults: fixture.defaults).automaticActivation)

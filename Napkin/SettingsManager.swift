@@ -6,6 +6,7 @@ import ServiceManagement
 final class SettingsManager {
     var idleMinutes: Double { didSet { defaults.set(idleMinutes, forKey: "idleMinutes") } }
     var automaticActivation: Bool { didSet { defaults.set(automaticActivation, forKey: "automaticActivation") } }
+    var showInMenuBar: Bool { didSet { defaults.set(showInMenuBar, forKey: "showInMenuBar") } }
     var showOverlay: Bool { didSet { defaults.set(showOverlay, forKey: "showOverlay") } }
     var ollamaPath: String { didSet { defaults.set(ollamaPath, forKey: "ollamaPath") } }
     var agentPath: String { didSet { defaults.set(agentPath, forKey: "agentPath") } }
@@ -17,9 +18,10 @@ final class SettingsManager {
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         defaults.register(defaults: ["idleMinutes": 30.0, "automaticActivation": true,
-                                     "showOverlay": true, "ollamaPath": "/opt/homebrew/bin/ollama"])
+                                     "showInMenuBar": true, "showOverlay": true, "ollamaPath": "/opt/homebrew/bin/ollama"])
         idleMinutes = defaults.double(forKey: "idleMinutes")
         automaticActivation = defaults.bool(forKey: "automaticActivation")
+        showInMenuBar = defaults.bool(forKey: "showInMenuBar")
         showOverlay = defaults.bool(forKey: "showOverlay")
         ollamaPath = defaults.string(forKey: "ollamaPath") ?? ""
         agentPath = defaults.string(forKey: "agentPath") ?? ""

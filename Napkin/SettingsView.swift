@@ -44,6 +44,9 @@ struct SettingsView: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section("System") {
+                Toggle("Show in menu bar", isOn: $coordinator.settings.showInMenuBar)
+                Text("To restore the icon when hidden, run napkin menubar show in Terminal.")
+                    .font(.caption).foregroundStyle(.secondary)
                 Toggle("Launch at login", isOn: Binding(get: { coordinator.settings.launchAtLogin }, set: { coordinator.settings.setLogin($0) }))
                 if let error = coordinator.settings.loginError { Text(error).foregroundStyle(.orange).font(.caption) }
                 LabeledContent("Input monitor", value: coordinator.permissionGranted ? "Ready" : "Permission needed")

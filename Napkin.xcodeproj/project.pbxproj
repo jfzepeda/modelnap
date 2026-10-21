@@ -417,7 +417,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jfzepeda.Napkin.debug;
 				PRODUCT_NAME = Napkin;
 				REGISTER_APP_GROUPS = YES;
@@ -451,7 +451,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jfzepeda.Napkin;
 				PRODUCT_NAME = Napkin;
 				REGISTER_APP_GROUPS = YES;

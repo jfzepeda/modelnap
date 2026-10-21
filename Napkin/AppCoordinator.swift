@@ -161,6 +161,12 @@ final class AppCoordinator {
                 case "toggle": setAutomaticActivation(!settings.automaticActivation)
                 default: throw ControlError.invalidCommand
                 }
+            case .menubar:
+                switch command.value {
+                case "show": settings.showInMenuBar = true
+                case "hide": settings.showInMenuBar = false
+                default: throw ControlError.invalidCommand
+                }
             case .idle:
                 guard let minutes = command.minutes, (1...240).contains(minutes) else { throw ControlError.invalidCommand }
                 setIdleMinutes(Double(minutes))
@@ -171,7 +177,8 @@ final class AppCoordinator {
         return try ControlReply(code: code, value: ControlStatus(
             state: state.rawValue, acceptingRequests: gateway.upstream != nil,
             mode: settings.automaticActivation ? "auto" : "manual",
-            automaticActivation: settings.automaticActivation, idleMinutes: settings.idleMinutes,
+            automaticActivation: settings.automaticActivation,
+            showInMenuBar: settings.showInMenuBar, idleMinutes: settings.idleMinutes,
             remainingSeconds: Int(ceil(idle.remaining(timeout: max(1, settings.idleMinutes) * 60))),
             starting: isStarting, stopping: isStopping, canStart: canEnable && monitor.isAvailable,
             error: errorMessage))

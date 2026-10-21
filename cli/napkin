@@ -13,6 +13,7 @@ Usage: napkin COMMAND
   auto on|off           Alias for mode auto|manual
   idle get              Read the configured timeout
   idle set MINUTES      Save a timeout from 1 to 240 (e.g. 10 or 10m)
+  menubar [show|hide]    Read or change menu bar icon visibility
   agents start          Start the locally configured agent while AI is active
   help                  Show this help
 
@@ -57,6 +58,15 @@ case "$command" in
             case "$1" in
                 auto|manual|toggle) body="{\"action\":\"mode\",\"value\":\"$1\"}" ;;
                 *) invalid 'Use mode [auto|manual|toggle].' ;;
+            esac
+        fi
+        ;;
+    menubar)
+        [ "$#" -le 1 ] || invalid 'Use menubar [show|hide].'
+        if [ "$#" -eq 1 ]; then
+            case "$1" in
+                show|hide) body="{\"action\":\"menubar\",\"value\":\"$1\"}" ;;
+                *) invalid 'Use menubar [show|hide].' ;;
             esac
         fi
         ;;
