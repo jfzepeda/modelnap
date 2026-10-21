@@ -143,17 +143,17 @@ Agregar ese `export PATH` a `~/.zshrc` para conservarlo en nuevas terminales. El
 Para desarrollo desde el repositorio, el mismo script está en `cli/napkin` y puede ejecutarse con `./cli/napkin help`.
 
 ```sh
-napkin mode              # Consultar modo y estado
-napkin mode auto         # Activar automáticamente tras inactividad
-napkin mode manual       # Activar solo con Start AI Now o el CLI
-napkin mode toggle       # Alternar auto/manual y mostrar el resultado
-napkin auto on           # Alias de mode auto; off equivale a manual
-napkin idle get          # Consultar espera configurada
-napkin idle set 10m      # Guardar 10 minutos; rango 1–240, también acepta 10
-napkin start             # Solicitar activación inmediata
-napkin resume            # Alias de start: nueva activación, sin recuperar trabajo cancelado
-napkin stop              # Bloquear inferencia y solicitar terminación
-napkin agents start     # Iniciar el runtime configurado, solo con IA activa
+napkin status          # Consultar estado y configuración
+napkin mode auto       # Activar IA después de inactividad
+napkin mode manual     # Activar IA solo cuando lo solicites
+napkin mode toggle     # Alternar automático/manual
+napkin idle set 10m    # Guardar espera de 10 minutos (1–240)
+napkin idle get        # Consultar espera
+napkin start           # Activar IA inmediatamente
+napkin resume          # Igual que start; no recupera trabajo cancelado
+napkin stop            # Detener IA
+napkin agents start    # Iniciar el agente configurado
+napkin help            # Ver ayuda
 ```
 
 La configuración usa las mismas preferencias que los controles de la app. Pasar de manual a automático, o cambiar el tiempo de espera, reinicia el contador. Cambiar el modo no detiene una sesión activa ni cancela un arranque ya solicitado. Stop reinicia la espera y conserva el modo: con automático habilitado, la IA podrá activarse al cumplirse ese nuevo plazo.
